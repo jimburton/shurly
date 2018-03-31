@@ -46,6 +46,7 @@ public class Shurly {
 
                         pageModel.put("URL", theURL);
                         pageModel.put("ENC", enc);
+                        pageModel.remove("ERROR");
                     }
                     return render(pageModel, "templates/index.vm");
                 });
