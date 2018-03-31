@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    font-family: monospace;
+    font-size: 14px;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px
+}
+
+input {
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+button {
+    float: right;
+}
+
+.error {
+    color: red;
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!DOCTYPE html>
+    <meta charset="utf-8" />
+    <title>Shurly the URL shortener</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h2>Shurly</h2>
+<form action="/" method="post">
+    #if($URL != "")
+        #set ($placeHolder = $URL)
+    #else
+        #set ($placeHolder = "Enter the URL")
+    #end
+    <input type="text"   name="the_url" placeholder="$placeHolder"/>
+    <input type="submit" value="Shorten"/>
+</form>
+<div id="output">
+    #if($URL)
+        $URL shortened to <a href="$HOME/$ENC">$HOME/$ENC</a>
+    #end
+</div>
+
+<div id="error">
+    #if ($ERROR)
+        $ERROR
+    #end
+</div>
+
+</body>
+</html>
