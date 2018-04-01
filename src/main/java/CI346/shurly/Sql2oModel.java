@@ -1,4 +1,9 @@
 package CI346.shurly;
+/**
+ * Our Data Access Object (DAO). The constructor is supplied with an
+ * instance of Sql20 which has been configured (in the Shurly class)
+ * to connect to a MySQL database running on localhost.
+ */
 
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -14,6 +19,11 @@ public class Sql2oModel implements Model {
         this.sql2o = sql2o;
     }
 
+    /**
+     * Put a new URL/encoding pair in the database
+     * @param enc
+     * @param url
+     */
     @Override
     public void putURL(String enc, String url) {
         try (Connection conn = sql2o.beginTransaction()) {
@@ -26,10 +36,16 @@ public class Sql2oModel implements Model {
         }
     }
 
+    /**
+     * Retrieve a URL given its encoding
+     * @param enc
+     * @return
+     */
     @Override
     public String getURL(String enc) {
         try (Connection conn = sql2o.open()) {
-            List<ShurlyURL> result = conn.createQuery("SELECT url FROM urls WHERE enc = :enc")
+            List<ShurlyURL> result = conn.createQuery(
+                    "SELECT url FROM urls WHERE enc = :enc")
                     .addParameter("enc", enc)
                     .executeAndFetch(ShurlyURL.class);
             return (result.size() == 1) ? result.get(0).getUrl() : URL_NOT_FOUND;

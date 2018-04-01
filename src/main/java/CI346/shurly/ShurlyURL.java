@@ -1,4 +1,8 @@
 package CI346.shurly;
+/**
+ * A POJO to hold records from the database. The @Data annotation
+ * saves us from having to write getters and setters.
+ */
 
 import lombok.Data;
 import java.util.UUID;
