@@ -5,8 +5,8 @@ simple URL-shortening service. The UI is a single template with a
 form to submit URLs.
 
 Fetch the code and compile it. You need to setup the database before
-starting the app. It is expecting a MySQL database server which is running on 
-`localhost` and which you have admin rights to.
+starting the app. It is expecting a MySQL database server running on 
+`localhost` and to which you have admin rights.
 
 ```
 $ git clone https://github.com/jimburton/shurly
