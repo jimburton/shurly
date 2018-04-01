@@ -17,7 +17,7 @@ import static spark.Spark.*;
 @Slf4j
 public class Shurly {
 
-    static Model model = null;
+    private static Model model = null;
 
     public static void main(String[] args) {
         // Configure Spark
@@ -28,12 +28,12 @@ public class Shurly {
         Sql2o sql2o = new Sql2o("jdbc:mysql://localhost:3306/shurly",
                 "shurly", "shurly");
         model = new Sql2oModel(sql2o);
-        Map<String, Object> pageModel = new HashMap<>();
-        pageModel.put("HOME", "http://localhost:4567");
 
         post("/", (req, res) -> {
                     String theURL = req.queryParams("the_url");
                     log.info("received POST: " + theURL);
+                    final Map<String, Object> pageModel = new HashMap<>();
+                    pageModel.put("HOME", "http://localhost:4567");
                     if (!isValidURL(theURL)) {
                         pageModel.put("ERROR", "INVALID_URL");
                     } else {
@@ -43,22 +43,21 @@ public class Shurly {
                         if(dupe.equals(Sql2oModel.URL_NOT_FOUND)) {
                             model.putURL(enc, theURL);
                         }
-
                         pageModel.put("URL", theURL);
                         pageModel.put("ENC", enc);
-                        pageModel.remove("ERROR");
                     }
                     return render(pageModel, "templates/index.vm");
                 });
 
         get("/", (req, res) -> {
             log.info("received GET");
-            return render(pageModel, "templates/index.vm");
+            return render(new HashMap<>(), "templates/index.vm");
         });
 
         get("/:enc", (req, res) -> {
             String theURL = lookup(req.params(":enc"));
             if(theURL.equals(Sql2oModel.URL_NOT_FOUND)) {
+                final Map<String, Object> pageModel = new HashMap<>();
                 pageModel.put("ERROR", "URL_NOT_FOUND");
                 return render(pageModel, "templates/index.vm");
             } else {
@@ -82,7 +81,7 @@ public class Shurly {
         return model.getURL(enc);
     }
 
-    public static String render(Map<String, Object> model, String templatePath) {
+    private static String render(Map<String, Object> model, String templatePath) {
         return new VelocityTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 }

@@ -27,8 +27,10 @@
     #else
         <div id="output">
             #if($URL)
-                $URL shortened to <a href="$HOME/$ENC"><span id="url_label">$HOME/$ENC</span></a>
-                <span id="copy_notice"><button onclick="copyURL()">Copy text</button></span>
+                $URL shortened to
+                <br />
+                <a href="$HOME/$ENC"><span id="url_label">$HOME/$ENC</span></a>
+                <span id="copy_notice"><button onclick="/*copyURL()*/">Copy text</button></span>
             #end
         </div>
     #end
