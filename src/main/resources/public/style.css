@@ -25,6 +25,23 @@ button {
     float: right;
 }
 
-.error {
+#error {
     color: red;
+}
+
+.label,
+.submit {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+.submit {
+    background-color: lightblue;
+    /**
+     * If the input field has a border,
+     * you need it here too to achieve equal heights.
+     */
+    border: 1px solid transparent;
 }
