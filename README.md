@@ -19,21 +19,21 @@ $ mvn exec:java
 ## Things to look out for when reading the code
 
 + The use of the config file, `src/main/resources/application.conf`,
-and the way it is loaded in the `Shurly` class.
+and the way it is loaded in the `Application` class.
 + The use of the lightweight data access framework `Sql2o` -- read
-the `Shurly` class to see how it is set up, then the `Sql2oModel` class
+the `Application` class to see how it is set up, then the `Sql2oModel` class
 to see it being used.
 + The use of the template, `src/main/resources/templates/index.vm`,
-and the way it is setup in the `main` method of `Shurly`.
+and the way it is setup in the `main` method of `Application`.
 
 ## Exercise
 
-At the moment our UI (a web page) is strictly for human consumption. It would be convenient, 
-however, to allow other applications that need shortened URLs to use this application as a
-[microservice](https://en.wikipedia.org/wiki/Microservices). A microservice architecture is one 
-in which the components of a system are separate mini-applications in their own right, 
+At the moment our UI (a web page) is strictly for human consumption. It would be a more useful
+tool, however, if we allowed other applications that need shortened URLs to use this application 
+as a [microservice](https://en.wikipedia.org/wiki/Microservices). A microservice architecture is 
+one in which the components of a system are separate mini-applications in their own right, 
 communicating with each other to achieve their goal. This can be an effective way to build 
-scalable systems, as the component parts are very loosely coupled and it makes it easier to
+scalable systems, as the component parts are very loosely coupled and it is easy to
 dedicate more resources to the components that need it. Another advantage is that each component
 can be written using the most appropriate programming language and tools, without affecting any
 other component.
@@ -42,10 +42,10 @@ We want the ability to submit a URL to be shortened and to receive the response 
 We can do that by differentiating between requests based on the `Accept` header. If a `POST` request
 is made with `Accept` set to `text/html` we will serve the response as a web page, as we currently
 do. If a `POST` request arrives with `Accept` set to `application/json`, we should return the 
-response as a JSON object. We can use `curl` to set the headers:
+response as a JSON object. We can use `curl` to set the header and pass the form data:
 
 ```
-$ curl -i -H "Accept: text/html" -d "the_url=http://brighton.ac.uk" http://localhost:4567/
+$ curl -H "Accept: text/html" -d "the_url=http://brighton.ac.uk" http://localhost:4567/
 HTTP/1.1 200 OK
 Date: Mon, 02 Apr 2018 12:15:50 GMT
 Content-Type: text/html;charset=utf-8
@@ -62,7 +62,7 @@ After you have added this feature you should be able to `POST` to the same addre
 JSON response, making it possible for other applications to consume and use this data:
 
 ```
-$ curl -i -H "Accept: application/json" -d "the_url=http://brighton.ac.uk" http://localhost:4567/
+$ curl -H "Accept: application/json" -d "the_url=http://brighton.ac.uk" http://localhost:4567/
 HTTP/1.1 200 OK
 Date: Mon, 02 Apr 2018 12:15:50 GMT
 Content-Type: text/html;charset=utf-8
@@ -86,10 +86,11 @@ Server: Jetty(9.4.8.v20171121)
 ```
 
 There are overloaded versions of the Spark methods to define routes (`get`, `post` and so on) that
-take an extra argument that specifies the content type that was requested:
+take an extra argument specifying the content type that was requested:
 
-```java
+```
 get("/hello", "application/json", (request, response) -> {
+    response.type("application/json");
     return "{\"message\": \"Hello World\"}";
 });
 ```
@@ -111,13 +112,13 @@ using):
 Now we can transform our POJOs to JSON objects like so: `new Gson().toJson(pojo)`.
 
 Change the existing `post` route in the `Application` class so that it is specialised for requests
-with `Accept` set to `text/html`. Add a `post` route that is specialised for JSON. In this route
-you need to set the content type of the response using `response.type`. The structure will be 
-something like this:
+with `Accept` set to `text/html`. Check that it still works as expected by running the tests. 
+Now you can add a `post` route that is specialised for JSON. In this route you need to set the 
+content type of the response using `response.type`. The structure will be something like this:
 
 ```
-post("/", "application/json", (req, resp) -> {
-    resp.type("application/json");
+post("/", "application/json", (request, response) -> {
+    response.type("application/json");
     
     // create and store the encoding as before
     // with the result in an instance of ShurlyURL called `result'
