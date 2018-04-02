@@ -16,6 +16,10 @@ $ mvn compile
 $ mysql -h localhost -u root -p < src/main/resources/db.sql
 $ mvn exec:java
 ```
+Read the first few parts of the Spark [Getting Started](http://sparkjava.com/documentation) 
+guide, at least up to the section on the `Response` object. That should be enough of an
+explanation of how Spark works for you to get an understanding of how the code works. 
+Read the source code, starting with the `Application` class, which is the entry point. 
 
 ## Things to look out for when reading the code
 
