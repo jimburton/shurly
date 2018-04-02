@@ -6,8 +6,11 @@ GRANT ALL PRIVILEGES ON shurly.* TO 'shurly'@'localhost' IDENTIFIED BY 'shurly';
 
 USE shurly;
 
-CREATE TABLE urls ( id smallint unsigned not null auto_increment,
-  url varchar(255) not null,
-  enc varchar(50),
-  constraint pk_urls primary key (id) );
+CREATE TABLE urls ( enc varchar(50) not null ,
+  url varchar(2048) not null,
+  constraint pk_urls primary key (enc) );
+
+SELECT * FROM urls;
+
+
 

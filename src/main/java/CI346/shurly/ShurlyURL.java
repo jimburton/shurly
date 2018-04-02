@@ -5,11 +5,9 @@ package CI346.shurly;
  */
 
 import lombok.Data;
-//
 
 @Data
 public class ShurlyURL {
-    //private UUID post_uuid;
     private STATUS status;
     private String url;
     private String enc;
