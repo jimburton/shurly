@@ -69,7 +69,7 @@ Content-Type: text/html;charset=utf-8
 Transfer-Encoding: chunked
 Server: Jetty(9.4.8.v20171121)
 
-{ status: "SUCCESS", url: "http://brighton.ac.uk", enc: "be6ce4cd" }
+{"status":"SUCCESS","url":"http://brighton.ac.uk","enc":"be6ce4cd"}
 ```
 
 The `status` field should contain the error message if something went wrong:
@@ -82,7 +82,7 @@ Content-Type: text/html;charset=utf-8
 Transfer-Encoding: chunked
 Server: Jetty(9.4.8.v20171121)
 
-{ status: "INVALID_URL", url: "", enc: "" }
+{"status": "INVALID_URL"}
 ```
 
 There are overloaded versions of the Spark methods to define routes (`get`, `post` and so on) that
@@ -112,7 +112,9 @@ using):
 Now we can transform our POJOs to JSON objects like so: `new Gson().toJson(pojo)`.
 
 Change the existing `post` route in the `Application` class so that it is specialised for requests
-with `Accept` set to `text/html`. Check that it still works as expected by running the tests. 
+with `Accept` set to `text/html`. Check that it still works as expected by encoding a few URLs
+using `curl` or your browser. 
+
 Now you can add a `post` route that is specialised for JSON. In this route you need to set the 
 content type of the response using `response.type`. The structure will be something like this:
 

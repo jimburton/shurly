@@ -4,11 +4,13 @@ package CI346.shurly;
  */
 
 import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.sql2o.Sql2o;
 import spark.ModelAndView;
+import spark.Request;
 import spark.template.velocity.VelocityTemplateEngine;
 
 import java.net.MalformedURLException;
@@ -17,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static CI346.shurly.STATUS.INVALID_URL;
 import static CI346.shurly.STATUS.URL_NOT_FOUND;
 import static spark.Spark.*;
 
@@ -55,33 +58,39 @@ public class Application {
 
         // Define the routes
 
-        // Handle POST submissions to the home page
-        post("/", (req, res) -> {
+        // Handle POST submissions with Accept set to text/html
+        post("/", "text/html", (req, res) -> {
             // get the form content that was submitted
             String theURL = req.queryParams("the_url");
-            log.info("received POST: " + theURL);
+            log.info("received POST with Accept: text/html: " + theURL);
+
+            ShurlyURL u = handlePost(theURL);
+
             // set up the model for the template
             final Map<String, Object> pageModel = new HashMap<>();
             // store the URL for the homepage in the template model
             pageModel.put("HOME", HOME);
-            if (!isValidURL(theURL)) {
-                pageModel.put("ERROR", "INVALID_URL");
+            if (u.getStatus().equals(INVALID_URL)) {
+                pageModel.put("ERROR", INVALID_URL.toString());
             } else {
-                // encode the URL
-                final String enc = Hashing.murmur3_32()
-                                .hashString(theURL, StandardCharsets.UTF_8).toString();
-                // look up the encoding to see if we stored it before
-                ShurlyURL u = model.getURL(req.params(":enc"));
-                if(u.getStatus().equals(URL_NOT_FOUND)) {
-                    // store the encoding if it is new
-                    model.putURL(enc, theURL);
-                }
                 // store the URL and its encoding in the template model
                 pageModel.put("URL", theURL);
-                pageModel.put("ENC", enc);
+                pageModel.put("ENC", u.getEnc());
             }
             // render the index template with the appropriate model
             return render(pageModel, indexPath);
+        });
+
+        // Handle POST submissions with Accept set to application/json
+        post("/", "application/json", (req, res) -> {
+            res.type("application/json");
+            // get the form content that was submitted
+            String theURL = req.queryParams("the_url");
+            log.info("received POST with Accept: application/json: " + theURL);
+
+            ShurlyURL u = handlePost(theURL);
+            // render the index template with the appropriate model
+            return new Gson().toJson(u);
         });
 
         // Handle GET requests for the home page
@@ -106,6 +115,27 @@ public class Application {
             }
             return null;// There is presumably a better way of doing this...
         });
+    }
+
+    private static ShurlyURL handlePost(String theURL) {
+        ShurlyURL u = new ShurlyURL();
+        if (!isValidURL(theURL)) {
+            u.setStatus(INVALID_URL);
+        } else {
+            // encode the URL
+            final String enc = Hashing.murmur3_32()
+                    .hashString(theURL, StandardCharsets.UTF_8).toString();
+            // look up the encoding to see if we stored it before
+            u = model.getURL(enc);
+            if(u.getStatus().equals(URL_NOT_FOUND)) {
+                // store the encoding if it is new
+                model.putURL(enc, theURL);
+            }
+            // store the URL and its encoding in the POJO
+            u.setUrl(theURL);
+            u.setEnc(enc);
+        }
+        return u;
     }
 
     /**
