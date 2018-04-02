@@ -19,12 +19,52 @@ $ mvn exec:java
 ## Things to look out for when reading the code
 
 + The use of the config file, `src/main/resources/application.conf`,
-and the way it is loaded in the `Application` class.
+and the way it is loaded in the `Application` class:
+```
+public static void main(String[] args) {
+  //Read in the config
+  Config conf         = ConfigFactory.load();
+  int port            = conf.getInt("web.port");
+  // and so on...
+```
 + The use of the lightweight data access framework `Sql2o` -- read
 the `Application` class to see how it is set up, then the `Sql2oModel` class
-to see it being used.
+to see it being used. Note that in `Sql2oModel` we use the Java 8 
+[try-with-resources](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html) feature
+that makes sure the resources declared in the head of the `try` statement are automatically
+closed for us:
+```
+// in Application.java
+
+// Set up the DAO
+Sql2o sql2o = new Sql2o(dbConnString, dbUser, dbPass);
+model = new Sql2oModel(sql2o);
+
+// in Sql2oModel.java
+try (Connection conn = sql2o.open()) {
+  List<ShurlyURL> result = conn.createQuery(
+    "SELECT url FROM urls WHERE enc = :enc")
+    .addParameter("enc", enc)
+    .executeAndFetch(ShurlyURL.class);
+```
 + The use of the template, `src/main/resources/templates/index.vm`,
-and the way it is setup in the `main` method of `Application`.
+and the way it is setup in the `main` method of `Application`. To pass data in to the template we
+create a `Map` whose keys we can then refer to in the template:
+
+```
+// in Application.java
+
+// set up the model for the template
+final Map<String, Object> pageModel = new HashMap<>();
+// store the URL for the homepage in the template model
+pageModel.put("HOME", HOME);
+pageModel.put("ENC", enc);
+// ...
+return render(pageModel, indexPath);
+            
+// in index.vm
+<a href="$HOME/$ENC"><span id="url_label">$HOME/$ENC</span></a>
+```
 
 ## Exercise
 
