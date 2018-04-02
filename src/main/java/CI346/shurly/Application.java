@@ -17,10 +17,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static CI346.shurly.STATUS.URL_NOT_FOUND;
 import static spark.Spark.*;
 
 @Slf4j
-public class Shurly {
+public class Application {
 
     //Our Data Access Object (DAO)
     private static Model model = null;
@@ -70,8 +71,8 @@ public class Shurly {
                 final String enc = Hashing.murmur3_32()
                                 .hashString(theURL, StandardCharsets.UTF_8).toString();
                 // look up the encoding to see if we stored it before
-                String dupe = model.getURL(req.params(":enc"));
-                if(dupe.equals(Sql2oModel.URL_NOT_FOUND)) {
+                ShurlyURL u = model.getURL(req.params(":enc"));
+                if(u.getStatus().equals(URL_NOT_FOUND)) {
                     // store the encoding if it is new
                     model.putURL(enc, theURL);
                 }
@@ -93,17 +94,17 @@ public class Shurly {
         // Handle GET requests for a shortcut
         get("/:enc", (req, res) -> {
             // look up the encoding in the database
-            String theURL = model.getURL(req.params(":enc"));
-            if(theURL.equals(Sql2oModel.URL_NOT_FOUND)) {
+            ShurlyURL u = model.getURL(req.params(":enc"));
+            if(u.getStatus().equals(URL_NOT_FOUND)) {
                 // Not a real encoding, show the home page with an error message
                 final Map<String, Object> pageModel = new HashMap<>();
-                pageModel.put("ERROR", "URL_NOT_FOUND");
+                pageModel.put("ERROR", URL_NOT_FOUND.toString());
                 return render(pageModel, indexPath);
             } else {
                 // The encoding is in the database, so redirect to the URL
-                res.redirect(theURL);
+                res.redirect(u.getUrl());
             }
-            return null;//There is presumably a better way of doing this
+            return null;// There is presumably a better way of doing this...
         });
     }
 

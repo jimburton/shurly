@@ -10,10 +10,12 @@ import org.sql2o.Sql2o;
 
 import java.util.List;
 
+import static CI346.shurly.STATUS.SUCCESS;
+import static CI346.shurly.STATUS.URL_NOT_FOUND;
+
 public class Sql2oModel implements Model {
 
     private Sql2o sql2o;
-    public final static String URL_NOT_FOUND = "URL_NOT_FOUND";
 
     public Sql2oModel(Sql2o sql2o) {
         this.sql2o = sql2o;
@@ -42,13 +44,21 @@ public class Sql2oModel implements Model {
      * @return
      */
     @Override
-    public String getURL(String enc) {
+    public ShurlyURL getURL(String enc) {
         try (Connection conn = sql2o.open()) {
             List<ShurlyURL> result = conn.createQuery(
                     "SELECT url FROM urls WHERE enc = :enc")
                     .addParameter("enc", enc)
                     .executeAndFetch(ShurlyURL.class);
-            return (result.size() == 1) ? result.get(0).getUrl() : URL_NOT_FOUND;
+            ShurlyURL u = new ShurlyURL();
+            if (result.size() == 1) {
+               u = result.get(0);
+               u.setStatus(SUCCESS);
+               return u;
+            } else {
+               u.setStatus(URL_NOT_FOUND);
+            }
+            return u;
         }
     }
 }
