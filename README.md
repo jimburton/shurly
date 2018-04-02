@@ -46,12 +46,6 @@ response as a JSON object. We can use `curl` to set the header and pass the form
 
 ```
 $ curl -H "Accept: text/html" -d "the_url=http://brighton.ac.uk" http://localhost:4567/
-HTTP/1.1 200 OK
-Date: Mon, 02 Apr 2018 12:15:50 GMT
-Content-Type: text/html;charset=utf-8
-Transfer-Encoding: chunked
-Server: Jetty(9.4.8.v20171121)
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,25 +57,13 @@ JSON response, making it possible for other applications to consume and use this
 
 ```
 $ curl -H "Accept: application/json" -d "the_url=http://brighton.ac.uk" http://localhost:4567/
-HTTP/1.1 200 OK
-Date: Mon, 02 Apr 2018 12:15:50 GMT
-Content-Type: text/html;charset=utf-8
-Transfer-Encoding: chunked
-Server: Jetty(9.4.8.v20171121)
-
 {"status":"SUCCESS","url":"http://brighton.ac.uk","enc":"be6ce4cd"}
 ```
 
 The `status` field should contain the error message if something went wrong:
 
 ```
-curl -i -H "Accept: application/json" -d "the_url=bananas" http://localhost:4567/
-HTTP/1.1 200 OK
-Date: Mon, 02 Apr 2018 12:15:50 GMT
-Content-Type: text/html;charset=utf-8
-Transfer-Encoding: chunked
-Server: Jetty(9.4.8.v20171121)
-
+curl -H "Accept: application/json" -d "the_url=bananas" http://localhost:4567/
 {"status": "INVALID_URL"}
 ```
 
