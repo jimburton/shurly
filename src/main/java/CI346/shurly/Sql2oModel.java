@@ -51,7 +51,7 @@ public class Sql2oModel implements Model {
                     .addParameter("enc", enc)
                     .executeAndFetch(ShurlyURL.class);
             ShurlyURL u = new ShurlyURL();
-            if (result.size() == 1) {
+            if (result.size() > 0) {
                u = result.get(0);
                u.setStatus(SUCCESS);
                return u;

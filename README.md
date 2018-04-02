@@ -127,5 +127,12 @@ post("/", "application/json", (request, response) -> {
 });
 ```
 
-Note that the two `post` routes will share a lot of code, so you can create a helper method to remove 
-duplication.
+Note that the two `post` routes will share a lot of code, once you've got this working you can create 
+a helper method to remove duplication. Create a method in `Application` with this signature:
+
+```
+private static ShurlyURL handlePost(String theURL)
+```
+
+and put the code that looks up the URL in the database and constructs an instance of `ShurlyURL` into
+`handlePost`. Then call this method from both of the `post` routes.
