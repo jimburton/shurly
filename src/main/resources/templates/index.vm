@@ -17,7 +17,8 @@
         #set ($placeHolder = "Enter the URL")
     #end
     <input type="text"   name="the_url" id="the_url" placeholder="$placeHolder"/>
-    <input type="submit" value="Shorten"/>
+    <input type="submit" onClick="return document.getElementById('the_url').value != '';"
+                         value="Shorten"/>
 </form>
     #if ($ERROR)
     <div id="error">
