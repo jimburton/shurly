@@ -7,15 +7,23 @@ form to submit URLs.
 
 Fetch the code and compile it. You need to set up the database before
 starting the app. It is expecting a MySQL database server running on 
-`localhost` and for which you have admin rights.
+`localhost` and for which you have admin rights. If you are working on one
+of the Linux boxes in the labs there is a guest account with username `guest` 
+and password `Br1ght@n` - edit the file `src/main/resources/db.sql` to add 
+these credentials.
 
 ```
 $ git clone https://github.com/jimburton/shurly
 $ cd shurly
 $ mvn compile
+# edit db.sql
 $ mysql -h localhost -u root -p < src/main/resources/db.sql
 $ mvn exec:java
 ```
+Read the first few parts of the Spark [Getting Started](http://sparkjava.com/documentation) 
+guide, at least up to the section on the `Response` object. That should be enough of an
+explanation of how Spark works for you to get an understanding of how the code works. 
+Read the source code, starting with the `Application` class, which is the entry point. 
 
 ## Things to look out for when reading the code
 
