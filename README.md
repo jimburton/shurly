@@ -8,16 +8,16 @@ form to submit URLs.
 Fetch the code and compile it. You need to set up the database before
 starting the app. It is expecting a MySQL database server running on 
 `localhost` and for which you have admin rights. If you are working on one
-of the Linux boxes in the labs there is a guest account with username `guest` 
-and password `Br1ght@n` - edit the file `src/main/resources/db.sql` to add 
-these credentials.
+of the Linux boxes in the labs you can set this up with the script `db-uob.sql` 
+that has the credentials for the guest account there. If you are working on a 
+different machine, edit the file `src/main/resources/db.sql` to add 
+the appropriate credentials.
 
 ```
 $ git clone https://github.com/jimburton/shurly
 $ cd shurly
 $ mvn compile
-# edit db.sql
-$ mysql -h localhost -u root -p < src/main/resources/db.sql
+$ mysql -h localhost -u root -p < src/main/resources/db-uob.sql
 $ mvn exec:java
 ```
 
