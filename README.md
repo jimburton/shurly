@@ -20,6 +20,7 @@ $ mvn compile
 $ mysql -h localhost -u root -p < src/main/resources/db.sql
 $ mvn exec:java
 ```
+
 Read the first few parts of the Spark [Getting Started](http://sparkjava.com/documentation) 
 guide, at least up to the section on the `Response` object. That should be enough of an
 explanation of how Spark works for you to get an understanding of how the code works. 
@@ -29,6 +30,7 @@ Read the source code, starting with the `Application` class, which is the entry 
 
 + The use of the config file, `src/main/resources/application.conf`,
 and the way it is loaded in the `Application` class:
+
 ```
 // in Application.java
 
@@ -38,12 +40,14 @@ public static void main(String[] args) {
   int port            = conf.getInt("web.port");
   // and so on...
 ```
+
 + The use of the lightweight data access framework `Sql2o` -- read
 the `Application` class to see how it is set up, then the `Sql2oModel` class
 to see it being used. Note that in `Sql2oModel` we use the Java 8 
 [try-with-resources](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html) feature
 that makes sure the resources declared in the head of the `try` statement are automatically
 closed for us:
+
 ```
 // in Application.java
 
@@ -59,6 +63,7 @@ try (Connection conn = sql2o.open()) {
     .addParameter("enc", enc)
     .executeAndFetch(ShurlyURL.class);
 ```
+
 + The use of the template, `src/main/resources/templates/index.vm`,
 and the way it is setup in the `main` method of `Application`. To pass data in to the template we
 create a `Map` whose keys we can then refer to in the template:
@@ -141,7 +146,7 @@ using):
   <groupId>com.google.code.gson</groupId>
   <artifactId>gson</artifactId>
   <version>2.8.2</version>
-</dependency>  
+</dependency>
 ``` 
 
 Now we can transform our POJOs to JSON objects as easily as this: `new Gson().toJson(pojo)`.
