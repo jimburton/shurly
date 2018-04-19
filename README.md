@@ -21,6 +21,9 @@ $ mysql -h localhost -u root -p < src/main/resources/db-uob.sql
 $ mvn exec:java
 ```
 
+If you are not using the UoB guest account you will need to edit the config file
+with the database credentials in it, `src/main/resources/application.conf`.
+
 Read the first few parts of the Spark [Getting Started](http://sparkjava.com/documentation) 
 guide, at least up to the section on the `Response` object. That should be enough of an
 explanation of how Spark works for you to get an understanding of how the code works. 
