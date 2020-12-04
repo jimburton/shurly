@@ -77,7 +77,6 @@ public class Application {
                 final String enc = Hashing.murmur3_32()
                                 .hashString(theURL, StandardCharsets.UTF_8).toString();
                 // look up the encoding to see if we stored it before
-                ShurlyURL u = model.getURL(enc);
                 if(u.getStatus().equals(URL_NOT_FOUND)) {
                     // store the encoding if it is new
                     model.putURL(enc, theURL);
