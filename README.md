@@ -6,21 +6,32 @@ simple URL-shortening service. The UI is a single web page with a
 form to submit URLs.
 
 Fetch the code and compile it. You need to set up the database before
-starting the app. It is expecting a MySQL database server running on 
-`localhost` and for which you have admin rights.
+starting the app. It is expecting a MySQL database server running on
+`localhost` and for which you have admin rights. If you are working on one
+of the Linux boxes in the labs you can set this up with the script `db-uob.sql`. 
+If you are working somewhere else, edit the file `src/main/resources/db.sql` to add 
+the appropriate credentials.
 
 ```
 $ git clone https://github.com/jimburton/shurly
 $ cd shurly
 $ mvn compile
-$ mysql -h localhost -u root -p < src/main/resources/db.sql
+$ mysql -h localhost -u guest -pBr1ght@n < src/main/resources/db-uob.sql
 $ mvn exec:java
 ```
+
+This starts the Spark webserver, which will be serving the application at `http://localhost:4567`.
+
+Read the first few parts of the Spark [Getting Started](http://sparkjava.com/documentation) 
+guide, at least up to the section on the `Response` object. That should be enough of an
+explanation of how Spark works for you to get an understanding of how the code works. 
+Read the source code, starting with the `Application` class, which is the entry point. 
 
 ## Things to look out for when reading the code
 
 + The use of the config file, `src/main/resources/application.conf`,
 and the way it is loaded in the `Application` class:
+
 ```
 // in Application.java
 
@@ -30,12 +41,14 @@ public static void main(String[] args) {
   int port            = conf.getInt("web.port");
   // and so on...
 ```
+
 + The use of the lightweight data access framework `Sql2o` -- read
 the `Application` class to see how it is set up, then the `Sql2oModel` class
 to see it being used. Note that in `Sql2oModel` we use the Java 8 
 [try-with-resources](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html) feature
 that makes sure the resources declared in the head of the `try` statement are automatically
 closed for us:
+
 ```
 // in Application.java
 
@@ -51,6 +64,7 @@ try (Connection conn = sql2o.open()) {
     .addParameter("enc", enc)
     .executeAndFetch(ShurlyURL.class);
 ```
+
 + The use of the template, `src/main/resources/templates/index.vm`,
 and the way it is setup in the `main` method of `Application`. To pass data in to the template we
 create a `Map` whose keys we can then refer to in the template:
@@ -133,7 +147,7 @@ using):
   <groupId>com.google.code.gson</groupId>
   <artifactId>gson</artifactId>
   <version>2.8.2</version>
-</dependency>  
+</dependency>
 ``` 
 
 Now we can transform our POJOs to JSON objects as easily as this: `new Gson().toJson(pojo)`.
@@ -163,5 +177,6 @@ create a helper method to remove duplication. Create a method in `Application` w
 private static ShurlyURL handlePost(String theURL)
 ```
 
-and put the code that looks up and optionally stores the URL in the database then constructs an 
+and put the code that looks up and optionally stores the URL in the database then constructs an
 instance of `ShurlyURL` into `handlePost`. Call this method from both of the `post` routes.
+

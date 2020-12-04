@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS shurly;
 
 CREATE DATABASE shurly;
+
 GRANT ALL PRIVILEGES ON shurly.* TO 'guest'@'localhost' IDENTIFIED BY 'Br1ght@on';
 
 USE shurly;

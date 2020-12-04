@@ -2,7 +2,8 @@ DROP DATABASE IF EXISTS shurly;
 DROP USER IF EXISTS 'shurly'@'localhost';
 
 CREATE DATABASE shurly;
-GRANT ALL PRIVILEGES ON shurly.* TO 'shurly'@'localhost' IDENTIFIED BY 'shurly';
+CREATE USER 'shurly'@'localhost' IDENTIFIED BY 'shurly';
+GRANT ALL PRIVILEGES ON * . * TO 'shurly'@'localhost';
 
 USE shurly;
 
