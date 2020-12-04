@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS shurly;
-DROP USER IF EXISTS shurly;
+DROP USER IF EXISTS 'shurly'@'localhost';
 
 CREATE DATABASE shurly;
 CREATE USER 'shurly'@'localhost' IDENTIFIED BY 'shurly';
