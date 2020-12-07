@@ -1,7 +1,7 @@
 # shurly
 
 This is a demo of using Spark with Velocity templates, with a lab exercise for students
-on the CI346 module at the University of Brighton. The app is a 
+on the CI646 module at the University of Brighton. The app is a 
 simple URL-shortening service. The UI is a single web page with a 
 form to submit URLs.
 
