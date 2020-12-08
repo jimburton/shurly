@@ -19,8 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static CI346.shurly.STATUS.INVALID_URL;
-import static CI346.shurly.STATUS.URL_NOT_FOUND;
+import static CI346.shurly.STATUS.*;
 import static spark.Spark.*;
 
 @Slf4j
@@ -138,6 +137,7 @@ public class Application {
             if(u.getStatus().equals(URL_NOT_FOUND)) {
                 // store the encoding if it is new
                 model.putURL(enc, theURL);
+                u.setStatus(SUCCESS);
             }
             // store the URL and its encoding in the POJO
             u.setUrl(theURL);
