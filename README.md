@@ -6,7 +6,7 @@ simple URL-shortening service. The UI is a single web page with a
 form to submit URLs.
 
 Fetch the code and compile it. You need to set up the database before
-starting the app. It is expecting a MySQL database server running on 
+starting the app. It is expecting a MySQL database server running on
 `localhost` and for which you have admin rights. If you are working on one
 of the Linux boxes in the labs you can set this up with the script `db-uob.sql`. 
 If you are working somewhere else, edit the file `src/main/resources/db.sql` to add 
@@ -20,8 +20,7 @@ $ mysql -h localhost -u guest -pBr1ght@n < src/main/resources/db-uob.sql
 $ mvn exec:java
 ```
 
-If you are not using the UoB guest account you will need to edit the config file
-with the database credentials in it, `src/main/resources/application.conf`.
+This starts the Spark webserver, which will be serving the application at `http://localhost:4567`.
 
 Read the first few parts of the Spark [Getting Started](http://sparkjava.com/documentation) 
 guide, at least up to the section on the `Response` object. That should be enough of an
@@ -178,5 +177,6 @@ create a helper method to remove duplication. Create a method in `Application` w
 private static ShurlyURL handlePost(String theURL)
 ```
 
-and put the code that looks up and optionally stores the URL in the database then constructs an 
+and put the code that looks up and optionally stores the URL in the database then constructs an
 instance of `ShurlyURL` into `handlePost`. Call this method from both of the `post` routes.
+
